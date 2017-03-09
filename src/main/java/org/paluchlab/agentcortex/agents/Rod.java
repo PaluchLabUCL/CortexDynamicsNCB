@@ -1053,7 +1053,7 @@ public class Rod{
 
         }
 
-        return Line3D.magnitude(force);
+        return Line3D.magnitude(force) + Line3D.magnitude(torque);
 
     }
 

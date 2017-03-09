@@ -685,7 +685,6 @@ public class CortexModel {
             placeBoundMyosinMotor(motor, bind);
             bindings.add(bind);
             myosins.add(motor);
-            relaxRod(motor);
         }
     }
 
@@ -1048,40 +1047,32 @@ public class CortexModel {
             bindings.get(j).applyForces();
         }
 
-        final double out_of_eq[] = {0};
-        max_out_of_eq = -Double.MAX_VALUE;
-        double sum = 0;
-        double max = 0;
+        double outOfEqSum = 0;
+
+        double max = -Double.MAX_VALUE;
 
         int a = actins.size();
 
         for (int j = 0; j < a; j++) {
             ActinFilament f = actins.get(j);
             double v = f.prepareForces();
-            sum += v;
+            outOfEqSum += v;
             max = max > v ? max : v;
 
         }
-
-        out_of_eq[0] += sum;
-
-
-        sum = 0;
 
         int myosinCount = myosins.size();
         for (int j = 0; j < myosinCount; j++) {
             MyosinMotor m = myosins.get(j);
             double v = m.prepareForces();
-            sum += v;
+            outOfEqSum += v;
             max = max > v ? max : v;
 
         }
 
-        if (max > max_out_of_eq) max_out_of_eq = max;
+        max_out_of_eq = max;
 
-        out_of_eq[0] += sum;
-
-        return out_of_eq[0];
+        return outOfEqSum;
     }
 
 
@@ -1268,122 +1259,6 @@ public class CortexModel {
 
     }
 
-    static double max_out_of_eq_rod = 0;
-    public void relaxRod(Rod rod){
-        double dt =constants.DT;
-        double last_forces = calculateForcesOnRod(rod);
-        double max_error = 0;
-        double count = 0;
-        do {
-            count++;
-            //calculate the forces on the rod.
-
-            //save positions.
-            double[] x = new double[3];
-            System.arraycopy(rod.position, 0, x, 0, 3);
-
-            double[] dir = new double[3];
-            System.arraycopy(rod.direction, 0, dir, 0, 3);
-
-            double[] force = new double[3];
-            System.arraycopy(rod.force, 0, force, 0, 3);
-
-            double[] torque = new double[3];
-            System.arraycopy(rod.torque, 0, torque, 0, 3);
-
-            rod.update(dt);
-
-            //saved the full position configurations.
-            double[] fx = new double[3];
-            System.arraycopy(rod.position, 0, fx, 0, 3);
-
-            double[] fdir = new double[3];
-            System.arraycopy(rod.direction, 0, fdir, 0, 3);
-
-            //back to the original positions.
-            System.arraycopy(x, 0, rod.position, 0, 3);
-            System.arraycopy( dir, 0, rod.direction, 0,3);
-            System.arraycopy(force, 0, rod.force, 0, 3);
-            System.arraycopy(torque, 0, rod.torque, 0, 3);
-
-
-            rod.update(dt/2);
-
-            clearForces();
-            double new_forces = calculateForcesOnRod(rod);
-
-            rod.update(dt/2);
-            clearForces();
-            double error = 0;
-            for(int i = 0; i<3; i++){
-                error += Math.pow(rod.position[i] - fx[i], 2);
-                error += Math.pow(rod.direction[i] - fdir[i], 2);
-            }
-
-            double normal_error = error/constants.ERROR_THRESHOLD;
-            if(normal_error>1 || Double.isNaN(error)){
-                //revert.
-                dt = Double.isNaN(error)?2*dt:0.99*dt/Math.sqrt(normal_error);
-                System.arraycopy(x, 0, rod.position, 0, 3);
-                System.arraycopy( dir, 0, rod.direction, 0,3);
-                double next_forces = calculateForcesOnRod(rod);
-                if(next_forces!=last_forces){
-                    System.out.println("failed to revert");
-                }
-            } else{
-                last_forces = calculateForcesOnRod(rod);
-                double e = 0.99*dt/Math.sqrt(normal_error);
-                if(e>2*dt){
-
-                    dt = 2*dt;
-                    //dt = dt>100*constants.DT?100*constants.DT:dt;
-                } else{
-                    dt = e;
-                }
-            }
-            if(error>max_error){
-                max_error = error;
-            }
-        } while(last_forces>constants.RELAXATION_LIMIT);
-        //relaxStresses();
-
-
-    }
-
-    double calculateForcesOnRod(Rod rod){
-
-        clearForces();
-
-        for(CrosslinkedFilaments xlf: xlinked){
-            xlf.applyForces();
-        }
-        for(MyosinMotorBinding binding: bindings){
-            binding.applyForces();
-        }
-
-        double[] a = rod.getPoint(rod.length*0.5);
-        double[] b = rod.getPoint(-rod.length * 0.5);
-
-
-
-
-        for (int i = 0; i < actins.size(); i++) {
-            ActinFilament filament = actins.get(i);
-            reflectedCollision(rod, filament);
-            filament.clearForces();
-
-        }
-
-        for (int j = 0; j < myosins.size(); j++) {
-            MyosinMotor motes = myosins.get(j);
-            reflectedCollision(rod, motes);
-            motes.clearForces();
-        }
-
-
-        return rod.prepareForces();
-
-    }
     public void center(){
         double z = 0;
 

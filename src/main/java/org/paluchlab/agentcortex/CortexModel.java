@@ -657,7 +657,6 @@ public class CortexModel {
 
             ActinFilament f = createNewFilament();
 
-            //double phi = Math.PI / 2 + (0.5 - number_generator.nextDouble()) * constants.ANGLE_SIGMA;
             double phi = Math.acos(Math.sin(constants.ANGLE_SIGMA/2)*(1 - 2*number_generator.nextDouble()));
 
             f.direction[0] = Math.cos(theta) * Math.sin(phi);
@@ -727,7 +726,6 @@ public class CortexModel {
         } else {
             double phi = Math.PI * number_generator.nextDouble();
             double theta = 2 * Math.PI * number_generator.nextDouble();
-            //TODO remove
             double l = motor.length + motor.diameter + host.diameter;
             host_b = new double[]{
                     host_a[0] + l * Math.cos(theta) * Math.sin(phi),
@@ -916,7 +914,7 @@ public class CortexModel {
                 working=false;
 
             } else if(count>=constants.SUB_STEPS){
-                log("fail");
+                log("fail: " + time + " : " + starting + " ? " + constants.RELAXATION_LIMIT + " : " + max_out_of_eq + " ? " + 0.01);
                 working=false;
             }
             last_energy = energy;

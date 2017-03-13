@@ -46,7 +46,7 @@ public class HeadlessSimulation {
         m.initializeSimulation();
 
         writer.writeSimulation(m);
-
+        writer.writeTimeStep(m);
         Runtime r = Runtime.getRuntime();
         r.addShutdownHook(new Thread(){
             @Override

@@ -7,14 +7,14 @@ package org.paluchlab.agentcortex;
  */
 public class ModelConstants {
     //initialization
-    public int filaments = 400;
-    public int motors = 31;
+    public int filaments = 2928;
+    public int motors = 122;
 
     //simulation
     public double DT = 1e-3;
-    public double WIDTH = 5;
-    public double SEED_WIDTH= 5;
-    public double THICKNESS = 0.659248735885;
+    public double WIDTH = 10;
+    public double SEED_WIDTH= 10;
+    public double THICKNESS = 1.03;
     public double STEPS_PER_SIMULATE=500;
     public double STEPS_PER_FRAME= 5e2;
     public double SUB_STEPS=10000;
@@ -40,7 +40,7 @@ public class ModelConstants {
     public double ANGLE_SIGMA = 0.39269908;
 
     public double CROSS_LINK_LENGTH = 0.2;
-    public double CROSS_LINK_BIND_PROBABILITY = .3;
+    public double CROSS_LINK_BIND_PROBABILITY = .25;
 
     public double K_x = 100;
 

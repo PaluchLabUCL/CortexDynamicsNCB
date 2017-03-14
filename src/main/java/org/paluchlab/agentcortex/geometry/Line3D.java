@@ -104,7 +104,7 @@ public class Line3D {
      * @param direction of line segment
      * @param length of line segment
      * @param point to find relative location.
-     * @return
+     * @return position along direction from the center (s-value).
      */
     static public double closestApproachPosition(double[] center, double[] direction, double length, double[] point){
         //find which zone point lies in.

@@ -4,6 +4,11 @@ import org.junit.Assert;
 import org.junit.Test;
 
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
 import static org.paluchlab.agentcortex.geometry.Line3D.closestApproachPosition;
 import static org.paluchlab.agentcortex.geometry.Line3D.cross;
 import static org.paluchlab.agentcortex.geometry.Line3D.difference;
@@ -231,6 +236,35 @@ public class Line3DTest{
         scanDirection(new double[]{-1,0,0});
 
     }
+
+    @Test
+    public void testPreComputedIntercepts() throws IOException {
+        String name = "org/paluchlab/agentcortex/geometry/points_and_lines.txt";
+        InputStream stream = getClass().getClassLoader().getResourceAsStream(name);
+
+        BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+
+        String s;
+        double inputTol = 0.002;
+        double l = 1;
+        int count = 0;
+        while((s=reader.readLine())!=null){
+            String[] data = s.split("\\t");
+            if(data.length==11){
+                double[] c = {Double.parseDouble(data[0]), Double.parseDouble(data[1]), Double.parseDouble(data[2])};
+                double[] n = {Double.parseDouble(data[3]), Double.parseDouble(data[4]), Double.parseDouble(data[5])};
+                double[] p = {Double.parseDouble(data[6]), Double.parseDouble(data[7]), Double.parseDouble(data[8])};
+                double d = Double.parseDouble(data[9]);
+                double loc = Double.parseDouble(data[10]);
+
+                Assert.assertEquals(Line3D.closestApproachPosition(c, n, l, p), loc, inputTol);
+                Assert.assertEquals(Line3D.distance(c, n, l, p), d, inputTol);
+                count++;
+            }
+        }
+        Assert.assertEquals(count, 1000);
+    }
+
 
 
 }

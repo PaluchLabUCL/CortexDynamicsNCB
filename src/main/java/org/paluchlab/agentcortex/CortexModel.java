@@ -17,6 +17,7 @@ import org.paluchlab.agentcortex.geometry.Line3D;
 import org.paluchlab.agentcortex.integrators.*;
 import org.paluchlab.agentcortex.interactions.CrosslinkedFilaments;
 import org.paluchlab.agentcortex.interactions.MyosinMotorBinding;
+import org.paluchlab.agentcortex.io.SimulationWriter;
 import org.paluchlab.agentcortex.io.TimePoint;
 
 /**
@@ -914,8 +915,12 @@ public class CortexModel {
                 working=false;
 
             } else if(count>=constants.SUB_STEPS){
-                log("fail: " + time + " : " + starting + " ? " + constants.RELAXATION_LIMIT + " : " + max_out_of_eq + " ? " + 0.01);
-                working=false;
+                if(starting<constants.RELAXATION_LIMIT){
+                    working = false;
+                } else{
+                    log("fail: " + time + " : " + starting + " ? " + constants.RELAXATION_LIMIT + " : " + max_out_of_eq + " ? " + 0.01);
+                    count=0;
+                }
             }
             last_energy = energy;
 

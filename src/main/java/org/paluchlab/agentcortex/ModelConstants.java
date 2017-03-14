@@ -18,7 +18,7 @@ public class ModelConstants {
     public double STEPS_PER_SIMULATE=500;
     public double STEPS_PER_FRAME= 5e2;
     public double SUB_STEPS=10000;
-    public double RELAXATION_LIMIT = 5e-1;
+    public double RELAXATION_LIMIT = 2;
     public double ERROR_THRESHOLD = 1e-4;
     //parameters
     public double MYOSIN_LENGTH = 0.8; //300nm

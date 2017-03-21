@@ -82,6 +82,24 @@ public class MyosinMotorBinding {
     }
 
     /**
+     * Vector from the front attachment point minus the back attachment point.
+     *
+     * @return {x,y,z} or an empty array if the motor has an unbound head.
+     */
+    public double[] getBackToFront(){
+        ActinFilament frontFilament = motor.getBound(MyosinMotor.FRONT);
+        ActinFilament backFilament = motor.getBound(MyosinMotor.BACK);
+        if(frontFilament==null||backFilament==null){
+            return new double[0];
+        }
+        double[] a = frontFilament.getPoint(binding_position[MyosinMotor.FRONT]);
+        return Line3D.difference(
+                a,
+                model.getReflectedPoint(a, backFilament.getPoint(binding_position[MyosinMotor.BACK]))
+        );
+    }
+
+    /**
      * Calculates the dipole as defined as the total force along the axis of the motor. defined as:
      *
      *   (f_{front} - f_{back}) dot motor.direction.
@@ -99,7 +117,10 @@ public class MyosinMotorBinding {
         front[1] -= back[1];
         front[2] -= back[2];
 
-        return Line3D.dot(motor.direction, front);
+        double[] backToFront = getBackToFront();
+        double[] p2pDirection = Line3D.normalize(backToFront);
+        double actualLength = Line3D.magnitude(backToFront);
+        return Line3D.dot(p2pDirection, front)*(actualLength)/2.0;
     }
 
     /**
@@ -109,7 +130,12 @@ public class MyosinMotorBinding {
      */
     public double[] getDirectionalForceDipole(){
         double f = getForceDipole();
-        return new double[]{f*motor.direction[0], f*motor.direction[1], f*motor.direction[2]};
+        double[] p2pDirection = Line3D.normalize(getBackToFront());
+        return new double[]{
+                f*p2pDirection[0]*p2pDirection[0],
+                f*p2pDirection[1]*p2pDirection[1],
+                f*p2pDirection[2]*p2pDirection[2]
+        };
     }
 
     /**

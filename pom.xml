@@ -16,7 +16,13 @@
                 <url>https://oss.sonatype.org/service/local/repositories/releases/content/</url>
             </repository>
         </repositories>
-
+        <licenses>
+            <license>
+                <name>MIT License</name>
+                <url>https://opensource.org/licenses/MIT</url>
+                <distribution>repo</distribution>
+            </license>
+        </licenses>
       <dependencies>
         <dependency>
           <groupId>org.orangepalantir</groupId>

@@ -915,12 +915,7 @@ public class CortexModel {
                 working=false;
 
             } else if(count>=constants.SUB_STEPS){
-                if(starting<constants.RELAXATION_LIMIT){
-                    working = false;
-                } else{
-                    log("fail: " + time + " : " + starting + " ? " + constants.RELAXATION_LIMIT + " : " + max_out_of_eq + " ? " + 0.01);
-                    count=0;
-                }
+                log("residual: " + time + " : " + starting + " ? " + constants.RELAXATION_LIMIT + " : " + max_out_of_eq + " ? " + 0.01);
             }
             last_energy = energy;
 

@@ -39,7 +39,7 @@ public class DirectoryCollector {
             "#17 sigmaYY\t" +
             "#18 sigmaYYstd\t" +
             "#19 sigmaZZ\t" +
-            "#20 sigmaZZstd\t";
+            "#20 sigmaZZstd\t\n";
 
     /**
      * Analysis all of the lockfiles in the provided directories.

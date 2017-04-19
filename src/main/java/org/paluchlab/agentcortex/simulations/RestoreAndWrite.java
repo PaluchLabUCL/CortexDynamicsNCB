@@ -26,10 +26,13 @@ public class RestoreAndWrite {
 
         SimulationWriter writer = new SimulationWriter(r.getTag(), simFile.getParentFile());
 
-        for(int i = 0; i<m.constants.STEPS_PER_SIMULATE; i++){
+        int stepsTaken = r.getPointCount() - 1;
+
+        for(int i = stepsTaken; i<m.constants.STEPS_PER_SIMULATE; i++){
             m.stepSimulation();
             writer.writeTimeStep(m);
         }
+
         System.exit(0);
     }
 }

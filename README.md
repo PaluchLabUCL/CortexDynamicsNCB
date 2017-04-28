@@ -1,7 +1,7 @@
 # CortexDynamicsNCB
 Agent based simulation for generating tension in an actin cortex.
 
-##Dependencies
+## Dependencies
 These are the build dependencies required for building and testing the project.
 
 * [Java](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html) At least version 8.
@@ -9,7 +9,7 @@ These are the build dependencies required for building and testing the project.
 * [LightWeightGraphing](https://github.com/odinsbane/light-weight-graphing) For creating graphs.
 * [Junit 4](http://junit.org/junit4/) For running tests.
 
-##Running a Simulation
+## Running a Simulation
 
 There are three ways to run the simulation. 
 
@@ -17,7 +17,7 @@ There are three ways to run the simulation.
 - Headless for long term and remote execution.
 - Restarting a previously executed simulation.
 
-####Headless simulation
+#### Headless simulation
 Simulations can take a long time to run, so the primary method to run a simulation is to use the [HeadlessSimulation](src/main/java/org/paluchlab/agentcortex/simulations/HeadlessSimulation.java) class.
 ```
 java -cp CortexDynamics-1.0.jar org.paluchlab.agentcortex.simulations.HeadlessSimulation parameters.txt
@@ -31,7 +31,7 @@ The program will immediately try to create two files: `12345678.lock` and `12345
 
 Once the interactions and rod files have been written the simulation can be interrupted or waited until completion.
 
-####Graphical Simulation.
+#### Graphical Simulation.
 To start a graphical simulation use the `ActinMeshApp` class.
 ```
 java -cp CortexDynamics-1.0.jar org.paluchlab.agentcortex.ActinMeshApp
@@ -44,7 +44,7 @@ To run a simulation you first need to initialize it, click on the button `initia
  
 Previously saved simulations can be loaded by selecting **'load simulation'** from the **'file'** menu. A file dialog will open and allow you to select a `.lock` file and view the simulation.
 
-####Restarting a Simulation.
+#### Restarting a Simulation.
 
 To restart or continue a previously executed simulation. First delete the lock file, then run:
 
@@ -56,36 +56,36 @@ That will recreate the lock file and start running the simulation from where it 
 
 _If there was an error in writing the files originally [RemoveBrokenTimePoints](src/main/java/org/paluchlab/agentcortex/io/RemoveBrokenTimePoints.java) might be able to repair the file._
 
-####Analysing Simulation Output
+#### Analysing Simulation Output
 
-#####Create a movie of a saved simulation, run:
+##### Create a movie of a saved simulation, run:
 ```
 java -cp CortexDynamics-1.0.jar org.paluchlab.agentcortex.analysis.CreateMovieFromLock
 ```
 The user will be prompted to select a `.lock` file.
 
-#####Interactively plot values from a directory of saved simulation, run
+##### Interactively plot values from a directory of saved simulation, run
 ```
  java -cp CortexDynamics-1.0.jar org.paluchlab.agentcortex.analysis.GraphingDirectoryCollector
  ```
 The user will be prompted to select a `.lock` file in a directory that they wish to analyse. All of the lock files
  in that directory will be analysed and the output will be plotted.
 
-#####Tension for a collection of directories.
+##### Tension for a collection of directories.
 ```
 java -cp CortexDynamics-1.0.jar org.paluchlab.agentcortex.analysis.HeadlessSubdirectoryCollector
 ```
 This will look for directories in the current directory that contain lock-files and perform analysis and 
 write the results to `genera-output.txt`
 
-#####Analyse the tension by parts.
+##### Analyse the tension by parts.
 ```
 java -cp CortexDynamics-1.0.jar org.paluchlab.agentcortex.analysis.TensionByParts directory1 directory2
 ```
 Each argument, eg directory1, directory2, will be scanned for directories that 
  contain lock-files in them. The output will be written to `directory1-parts.txt` or `dot-parts.txt` if 
  the argument is `.`
-##Navigating the source code
+## Navigating the source code
 
 The simplest way to understand the flow of the code is to start from [HeadlessSubdirectoryCollector](src/main/java/org/paluchlab/agentcortex/simulations/HeadlessSimulation.java).
 

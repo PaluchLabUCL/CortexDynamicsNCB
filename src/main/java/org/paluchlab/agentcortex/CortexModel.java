@@ -705,7 +705,7 @@ public class CortexModel {
         for (ActinFilament target : actins) {
             if (host == target) continue;
             double separation = target.closestApproach(getReflectedPoint(target.position, host_a));
-            if (separation < motor.length) {
+            if (separation < motor.length + 2*constants.MYOSIN_BIND_LENGTH) {
                 double[] intersections = target.getIntersections(getReflectedPoint(target.position, host_a), motor.length + 2*constants.MYOSIN_BIND_LENGTH);
                 if (intersections.length == 0) {
                     //The attached head of the motor is too close to the center of the target filament.
@@ -727,7 +727,7 @@ public class CortexModel {
         } else {
             double phi = Math.PI * number_generator.nextDouble();
             double theta = 2 * Math.PI * number_generator.nextDouble();
-            double l = motor.length + motor.diameter + host.diameter;
+            double l = motor.length + 2*constants.MYOSIN_BIND_LENGTH;
             host_b = new double[]{
                     host_a[0] + l * Math.cos(theta) * Math.sin(phi),
                     host_a[1] + l * Math.sin(theta) * Math.sin(phi),
@@ -1017,16 +1017,52 @@ public class CortexModel {
             if(possible.length==0) return;
         }
 
-        double bs = possible[number_generator.nextInt(possible.length)];
+        double s1, s2;
+        if(possible.length==1){
+            //the range goes from the closest end to the possible.
+            if(possible[0]<0){
+                s1 = -0.5*fb.length;
+                s2 = possible[0];
+            } else{
+                s1 = possible[0];
+                s2 = 0.5*fb.length;
+            }
+        } else{
+            //the range goes between the two possible lengths.
+            s1 = possible[0];
+            s2 = possible[1];
+        }
 
+
+
+        double bs;
+        double ds = s2 - s1;
+        if(Math.abs(ds)<1e-6){
+            //they're pretty much one point.
+            bs = s1;
+        } else{
+            bs = s1 + (s2-s1)*number_generator.nextDouble();
+
+        }
 
         double[] b = fb.getPoint(bs);
+
+        possible = fa.getIntersections(getReflectedPoint(fa.position, b), x.length);
+
+        if(possible.length==0){
+            log("Warning: cross linked filaments not close enough");
+            possible = fa.getIntersections(fb.position, x.length);
+            if(possible.length==0) return;
+        }
+        double as = possible[number_generator.nextInt(possible.length)];
+        a = fa.getPoint(as);
+
         x.A = a;
         x.B = b;
 
         double duration = Double.MAX_VALUE;
 
-        xlinked.add(new CrosslinkedFilaments(this, fa, fb, x, sections[0], bs, duration));
+        xlinked.add(new CrosslinkedFilaments(this, fa, fb, x, as, bs, duration));
 
         linkers.add(x);
     }

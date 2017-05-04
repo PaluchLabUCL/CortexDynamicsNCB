@@ -4,7 +4,7 @@
      
       <groupId>org.paluchlab</groupId>
       <artifactId>CortexDynamics</artifactId>
-      <version>1.0</version>
+      <version>1.1-snapshot</version>
       <packaging>jar</packaging>
      
       <name>Acto-myosin cortex simulation.</name>
